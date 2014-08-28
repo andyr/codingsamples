@@ -1,0 +1,133 @@
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.hide {
+  display: none;
+}
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.rect (@width: 100px, @height: 100px) {
+  width: @width;
+  height: @height;
+}
+
+.square (@dim) {
+  .rect(@dim, @dim);
+}
+
+.circle (@dia) {
+  .square(@dia);
+  .rounded-corners(50%);
+}
+
+.rotate (@deg) {
+  transform: rotate(@deg);
+  -ms-transform: rotate(@deg);
+  -webkit-transform: rotate(@deg);
+}
+
+.clock-text(@toppos: 0, @leftpos: 0, @rotate: 0) {
+  font-size: 18pt;
+  font-weight: bold;
+  font-family: "Lucida Handwriting", times, sans;
+  top: @toppos;
+  left: @leftpos;
+  .rotate(@rotate);
+}
+
+div.clock {
+  position: relative;
+  border: 5px solid #333;
+  .circle(325px);
+
+  span {
+    position: absolute;
+  }
+}
+
+
+/* Draw clock ticks */
+@from: 0;
+@to: 12;
+
+.angle (@theta) {
+  @angle: unit(round((@theta - 1) * 30), deg);
+}
+
+.clock-tick (@top: 0, @left: 0, @rotate: 0) {
+  position: absolute;
+  top: @top;
+  left: @left;
+  .rotate(@rotate);
+  width: 25px;
+  height: 0;
+  border: 1px solid #333;
+}
+
+.loop (@index) when (@index > @from) {
+  .x-@{index} {
+    .angle(@index);
+    .clock-tick(
+        unit( 162 + sin(@angle) * 150, px), 
+        unit( 150 + cos(@angle) * 150, px), 
+        @angle
+    );
+    .rotate(@angle);
+  }
+  .loop(@index - 1);
+}
+.loop (0) {}
+.loop(@to);
+
+
+.hand(@height: 250px) {
+  position: absolute;
+  top: 0px;
+  left: 162px;
+  width: 0;
+  height: 250px;
+  border: 1px solid #000;
+  height: @height;
+  .rounded-corners(5px);
+  transform-origin: 0 100%;
+  -ms-transform-origin: 0 100%;
+  -webkit-transform-origin: 0 100%;
+}
+
+/* Just eyeball the vertical offset of the origin of the hands for now */
+.second-hand {
+  .hand(250px);
+  top: -88px;
+  border: 1px solid #333;
+}
+
+.minute-hand {
+  .hand(200px);
+  border: 2px solid #333;
+  top: -38px;
+}
+
+.hour-hand {
+  .hand(100px);
+  border: 3px solid #333;
+  top: 62px;
+}
+
+
+
+
+
